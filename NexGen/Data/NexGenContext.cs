@@ -1,15 +1,14 @@
-﻿using System.Reflection;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using NexGen.Models.Entities;
 
 namespace NexGen.Data;
 
-public class NexGenDbContext : DbContext
+public class NexGenContext : DbContext
 {
-    public NexGenDbContext(DbContextOptions<NexGenDbContext> options) : base(options) { }
+    public NexGenContext(DbContextOptions<NexGenContext> options) : base(options) { }
 
     public DbSet<UserEntity> Users { get; set; } = null!;
-    
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<UserEntity>(entity =>

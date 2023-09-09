@@ -1,11 +1,18 @@
-﻿using NexGen.Models.Dtos;
+﻿using Microsoft.AspNetCore.Mvc;
+using NexGen.Models.Dtos;
 
 namespace NexGen.Services;
 
 public class AuthService
 {
-    public async Task<string> Login(LoginDto dto, CancellationToken cancellationToken)
+    public async Task<IActionResult> Login(LoginDto dto)
     {
-        return "27592376958892357982759235foiwuigw35435";
+        
+    }
+    
+    public async Task<IActionResult> Register(RegisterDto dto)
+    {
+        var email = dto.Email;
+        var password = dto.Password;
     }
 }

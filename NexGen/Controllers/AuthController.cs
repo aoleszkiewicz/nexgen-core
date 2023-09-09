@@ -4,7 +4,7 @@ using NexGen.Services;
 
 namespace NexGen.Controllers;
 
-[Route("/api/[controller]")]
+[Route("/api/auth")]
 [ApiController]
 public class AuthController : ControllerBase
 {
@@ -17,14 +17,12 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto dto)
     {
-        // string token = await _authService.Login(dto);
-        return Ok("OK");
+        return await _authService.Login(dto);
     } 
     
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto dto)
     {
-        // string token = await _authService.Login(dto);
-        return Ok("OK");
+        return await _authService.Register(dto);
     }
 }
