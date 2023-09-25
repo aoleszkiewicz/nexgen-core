@@ -1,6 +1,3 @@
-# NexGen-CORE / API
+# Core Backend for my Future Applications!
 
-Used technologies:
-- C#,
-- ASP.NET,
-- Entity Framework Core,
+tbc..
