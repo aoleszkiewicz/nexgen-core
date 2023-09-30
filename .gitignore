@@ -212,6 +212,9 @@ PublishScripts/
 csx/
 *.build.csdef
 
+# Ignore appSettingsDevelopment.json
+appsettings.Development.json
+
 # Microsoft Azure Emulator
 ecf/
 rcf/
