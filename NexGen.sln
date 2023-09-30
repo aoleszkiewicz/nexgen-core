@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexGen", "NexGen\NexGen.csproj", "{01957561-59DC-49B7-837C-22054ACF69EC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NexGen.Helpers", "NexGen.Helpers\NexGen.Helpers.csproj", "{2B1D9999-C93D-4AE3-B88B-7978B0E635B7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{01957561-59DC-49B7-837C-22054ACF69EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01957561-59DC-49B7-837C-22054ACF69EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01957561-59DC-49B7-837C-22054ACF69EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B1D9999-C93D-4AE3-B88B-7978B0E635B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B1D9999-C93D-4AE3-B88B-7978B0E635B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B1D9999-C93D-4AE3-B88B-7978B0E635B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B1D9999-C93D-4AE3-B88B-7978B0E635B7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
