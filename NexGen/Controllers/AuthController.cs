@@ -1,30 +1,37 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using NexGen.Helpers;
 using NexGen.Models.Dtos;
 using NexGen.Services;
 
 namespace NexGen.Controllers;
 
-[Route("/api/[controller]")]
+[Route("/api/auth")]
 [ApiController]
 public class AuthController : ControllerBase
 {
-    private readonly AuthService _authService;
-    
-    public AuthController(AuthService authService) => 
-        _authService = authService;
+    private readonly IAuthService _authService;
 
-    
+    public AuthController(IAuthService authService)
+    {
+        _authService = authService;
+    } 
+
+    [AllowAnonymous]
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto dto)
     {
-        // string token = await _authService.Login(dto);
-        return Ok("OK");
+        var user = await _authService.Login(dto);
+        
+        return Ok(user);
     } 
     
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto dto)
     {
-        // string token = await _authService.Login(dto);
-        return Ok("OK");
+        var user = await _authService.Register(dto);
+        
+        return Ok(user);
     }
 }
