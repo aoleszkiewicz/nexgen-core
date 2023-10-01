@@ -214,6 +214,7 @@ csx/
 
 # Ignore appSettingsDevelopment.json
 appsettings.Development.json
+appsettings.json
 
 # Microsoft Azure Emulator
 ecf/

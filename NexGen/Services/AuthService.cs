@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using NexGen.Data;
 using NexGen.Helpers;
+using NexGen.Helpers.Validators;
 using NexGen.Models.Dtos;
 using NexGen.Models.Entities;
 
@@ -8,20 +9,22 @@ namespace NexGen.Services;
 
 public interface IAuthService
 {
-    Task<UserEntity> Login(LoginDto dto);
-    Task<UserEntity> Register(RegisterDto dto);
+    Task<UserDto> Login(LoginDto dto, CancellationToken cancellationToken);
+    Task<string> Register(RegisterDto dto, CancellationToken cancellationToken);
 }
 
 public class AuthService : IAuthService
 {
     private readonly NexGenDbContext _dbContext;
+    private readonly IConfiguration _configuration;
     
-    public AuthService(NexGenDbContext dbContext)
+    public AuthService(NexGenDbContext dbContext, IConfiguration configuration)
     {
         _dbContext = dbContext;
+        _configuration = configuration;
     }
     
-    public async Task<UserEntity> Login(LoginDto dto)
+    public async Task<UserDto> Login(LoginDto dto, CancellationToken cancellationToken)
     {
         if (dto.Email is null)
         {
@@ -33,11 +36,11 @@ public class AuthService : IAuthService
             throw new ArgumentNullException(nameof(dto.Password), "Password cannot be null");
         }
         
-        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == dto.Email, cancellationToken);
 
         if (user is null)
         {
-            throw new Exception("User not found");
+            throw new Exception("User does not exist");
         }
         
         if (user.Email != dto.Email)
@@ -50,14 +53,20 @@ public class AuthService : IAuthService
             throw new ArgumentException("Password does not match");
         }
 
-        return user;
+        return new UserDto()
+        {
+            AccessToken = user.AccessToken,
+            RefreshToken = user.RefreshToken,
+        };
     }
     
-    public async Task<UserEntity> Register(RegisterDto dto)
+    public async Task<string> Register(RegisterDto dto, CancellationToken cancellationToken)
     {
-        if (dto.Email is null)
+        var isEmailValid = FieldValidators.ValidateEmail(dto.Email);
+        
+        if (!isEmailValid)
         {
-            throw new ArgumentNullException(nameof(dto.Email), "Email cannot be null");
+            throw new ArgumentException("Email is not valid");
         }
         
         if (dto.Password is null)
@@ -65,7 +74,7 @@ public class AuthService : IAuthService
             throw new ArgumentNullException(nameof(dto.Password), "Password cannot be null");
         }
 
-        var userExists = await _dbContext.Users.AnyAsync(u => u.Email == dto.Email);
+        var userExists = await _dbContext.Users.AnyAsync(u => u.Email == dto.Email, cancellationToken);
         
         if (userExists)
         {
@@ -76,16 +85,17 @@ public class AuthService : IAuthService
         {
             Id = Guid.NewGuid(),
             Email = dto.Email,
-            Hash = PasswordHelper.Hash(dto.Password)
+            Hash = PasswordHelper.Hash(dto.Password),
         };
-        
-        await _dbContext.Database.BeginTransactionAsync();
-        
-        await _dbContext.Users.AddAsync(user);
-        await _dbContext.SaveChangesAsync();
-        
-        await _dbContext.Database.CommitTransactionAsync();
 
-        return user;
+        user.AccessToken = JwtHelper.GenerateAccessToken(user.Id, user.Email, user.Hash, _configuration.GetSection("JwtRelated:SecretKey").Value);
+        user.RefreshToken = JwtHelper.GenerateRefreshToken(user.Id, user.Email, user.Hash, _configuration.GetSection("JwtRelated:SecretKey").Value);
+        
+        await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+        await _dbContext.Users.AddAsync(user, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+        await _dbContext.Database.CommitTransactionAsync(cancellationToken);
+        
+        return user.AccessToken;
     }
 }

@@ -19,19 +19,19 @@ public class AuthController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginDto dto)
+    public async Task<IActionResult> Login(LoginDto dto, CancellationToken cancellationToken)
     {
-        var user = await _authService.Login(dto);
+        var token = await _authService.Login(dto, cancellationToken);
         
-        return Ok(user);
+        return Ok(token);
     } 
     
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterDto dto)
+    public async Task<IActionResult> Register(RegisterDto dto, CancellationToken cancellationToken)
     {
-        var user = await _authService.Register(dto);
+        var token = await _authService.Register(dto, cancellationToken);
         
-        return Ok(user);
+        return Ok(token);
     }
 }
