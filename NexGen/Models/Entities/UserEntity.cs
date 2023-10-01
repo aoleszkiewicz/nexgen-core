@@ -10,6 +10,4 @@ public class UserEntity : BaseEntity
     public string Email { get; set; }
     [Required]
     public string Hash { get; set; }
-    public string AccessToken { get; set; }
-    public string RefreshToken { get; set; }
 }
