@@ -26,14 +26,18 @@ public class AuthService : IAuthService
     
     public async Task<string> Register(RegisterDto dto, CancellationToken cancellationToken)
     {
+        if (dto is null) throw new ArgumentException("Fill the values");
+        
         var isEmailValid = FieldValidators.ValidateEmail(dto.Email);
+
+        var isPasswordValid = FieldValidators.ValidatePassword(dto.Password);
         
         if (!isEmailValid)
             throw new ArgumentException("Email is not valid");
-        
-        if (dto.Password is null)
-            throw new ArgumentNullException(nameof(dto.Password), "Password cannot be null");
 
+        if (!isPasswordValid)
+            throw new ArgumentException("Password is not valid");
+        
         var userExists = await _dbContext.Users.AnyAsync(u => u.Email == dto.Email, cancellationToken);
         
         if (userExists)

@@ -13,4 +13,13 @@ public static class FieldValidators
 
         return emailRegex.IsMatch(email);
     }
+
+    public static bool ValidatePassword(string password)
+    {
+        if (password is null) throw new ArgumentNullException(nameof(password), "Password cannot be null");
+
+        var passwordRegex = new Regex(@"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$");
+
+        return passwordRegex.IsMatch(password);
+    }
 }
